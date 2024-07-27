@@ -1,0 +1,100 @@
+﻿# Đặt cấu hình gitignore cho các tệp và thư mục không cần thiết trong dự án ASP.NET
+
+# Các tệp và thư mục do Visual Studio tạo ra
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Các tệp và thư mục do .NET Core tạo ra
+*.dll
+*.exe
+*.pdb
+*.dbmdl
+*.bak
+*.swp
+
+# Các tệp và thư mục của NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+packages/
+*.nuget/
+
+# Thư mục chứa các tệp build
+bin/
+obj/
+
+# Tệp cấu hình của các công cụ phát triển
+*.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+
+# Các tệp log
+*.log
+
+# Các tệp tạo ra từ quá trình build
+*.lock.json
+*.lock
+*.tgz
+
+# Các tệp và thư mục của Docker
+docker-compose.override.yml
+.docker/
+.dockerignore
+
+# Các thư mục và tệp của các công cụ CI/CD
+*.azure-pipelines.yml
+*.gitlab-ci.yml
+*.travis.yml
+
+# Các tệp tạo ra từ các công cụ phân tích mã nguồn
+coverage/
+test-results/
+*.coverage
+*.coveragexml
+
+# Các tệp cấu hình của môi trường phát triển
+.env
+
+# Các tệp của các IDE khác
+*.idea/
+*.project
+*.classpath
+*.settings/
+*.launch
+*.log
+
+# Các tệp lưu trữ tạm thời của hệ điều hành
+Thumbs.db
+Desktop.ini
+
+# Các tệp tạo ra từ IDE (Eclipse, IntelliJ IDEA, v.v.)
+.project
+.classpath
+.idea/
+*.iml
+*.suo
+*.user
+*.userosscache
+*.log
+*.ncb
+*.suo
+
+# Các tệp tạo ra từ .NET Framework
+*.exe
+*.dll
+*.pdb
+*.cache
+*.vscode/
+
+# Các thư mục chứa dữ liệu tạm thời của hệ điều hành
+.DS_Store
+*.app
+*.pyc
+*.pyo
+__pycache__/
