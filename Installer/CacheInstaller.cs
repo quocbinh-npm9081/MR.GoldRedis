@@ -16,7 +16,7 @@ namespace MR.GoldRedis.Installer
             configuration.GetSection("RedisConfiguration").Bind(redisConfiguration);
 
             //Đăng ký redisConfiguration như một dịch vụ singleton, tức là một phiên bản duy nhất sẽ được tạo ra và sử dụng xuyên suốt vòng đời của ứng dụng.
-            services.AddSingleton(redisConfiguration);
+            services.AddSingleton<RedisConfiguration>(redisConfiguration);
 
             //Kiểm tra xem Redis có được phép kích hoạt hay không:
             if (!redisConfiguration.Enabled)

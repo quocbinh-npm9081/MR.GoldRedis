@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
@@ -16,10 +17,39 @@ namespace MR.GoldRedis.Services
             _connectionMultiplexer = connectionMultiplexer;
             _distributedCache = distributedCache;
         }
-        public Task<string> GetCacheResonseAsync(string cacheKey)
+        public async Task<string> GetCacheResonseAsync(string cacheKey)
         {
-            throw new NotImplementedException();
+            var cacheResponse = await _distributedCache.GetStringAsync(cacheKey);
+            return string.IsNullOrEmpty(cacheResponse) ? null : cacheResponse;
         }
+
+        public async Task RemoveCacheResponse(string pattern)
+        {
+            if (string.IsNullOrWhiteSpace(pattern))
+                throw new ArgumentNullException($"pattern cannot be null or whitespace {nameof(pattern)}");
+
+            await foreach (var key in GetKeyAync(pattern + "*"))
+            {
+                await _distributedCache.RemoveAsync(key);
+            }
+        }
+
+        private async IAsyncEnumerable<string> GetKeyAync(string pattern)
+        {
+            if (string.IsNullOrWhiteSpace(pattern))
+                throw new ArgumentNullException($"pattern cannot be null or whitespace {nameof(pattern)}");
+
+            foreach (var endPoint in _connectionMultiplexer.GetEndPoints())
+            {
+                var server = _connectionMultiplexer.GetServer(endPoint);
+                foreach (var Key in server.Keys(pattern: pattern))
+                {
+                    yield return Key.ToString();
+                }
+            }
+        }
+
+
 
         public async Task SetCacheResponseAsync(string cacheKey, object response, TimeSpan timeOut)
         {
@@ -27,7 +57,6 @@ namespace MR.GoldRedis.Services
                 return;
 
 
-            //Bình 
             var serializerResponse = JsonSerializer.Serialize(response, new JsonSerializerOptions()
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase, // Bước này là chuyển đổi Class => JSON (Với Key sẽ là kiểu camelCase(firstName) thay vì PascalCase(FirstName))

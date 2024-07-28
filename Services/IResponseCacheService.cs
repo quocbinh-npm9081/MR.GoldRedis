@@ -7,5 +7,8 @@ namespace MR.GoldRedis.Services
     {
         Task SetCacheResponseAsync(string cacheKey, object response, TimeSpan timeOut);
         Task<string> GetCacheResonseAsync(string cacheKey);
+
+        Task RemoveCacheResponse(string partent);
+
     }
 }

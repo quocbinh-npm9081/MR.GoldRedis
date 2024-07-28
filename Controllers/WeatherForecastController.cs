@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MR.GoldRedis.Attributes;
+using MR.GoldRedis.Services;
 
 namespace MR.GoldRedis.Controllers
 {
@@ -17,23 +17,44 @@ namespace MR.GoldRedis.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        private readonly IResponseCacheService _responseCacheService;
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IResponseCacheService responseCacheService)
         {
             _logger = logger;
+            _responseCacheService = responseCacheService;
         }
 
-        [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        [HttpGet("getAll")]
+        [Cache(1000)]
+        public async Task<ActionResult<IEnumerable<WeatherForecast>>> GetWeatherAsync(string keysearch, int pageSize, int pageIndex)
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            var result = new List<WeatherForecast>()
             {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+                new WeatherForecast()
+                {
+                    Name = "Binh"
+                },
+                new WeatherForecast()
+                {
+                    Name = "An"
+                },
+                new WeatherForecast()
+                {
+                    Name = "Hoa"
+                },
+                new WeatherForecast()
+                {
+                    Name = "Bay"
+                }
+            };
+            return Ok(result);
+        }
+        [HttpGet("Create")]
+        public async Task<IActionResult> Create()
+        {
+            //var enpoint = HttpContext.Request.Path;
+            await _responseCacheService.RemoveCacheResponse("/WeatherForecast/getAll");
+            return Ok();
         }
     }
 }
